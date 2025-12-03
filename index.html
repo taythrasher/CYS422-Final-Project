@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Morse Message Viewer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: #0ff;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+    }
+    #messages {
+      background: #000;
+      border: 1px solid #0ff;
+      padding: 15px;
+      border-radius: 8px;
+      font-size: 1.2em;
+      white-space: pre-wrap;
+    }
+    .timestamp {
+      color: #6ff;
+      font-size: 0.8em;
+    }
+  </style>
+</head>
+<body>
+  <h1>Morse Message Viewer</h1>
+  <div id="messages">Loading messages...</div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+  <script>
+    // Firebase Config
+    const firebaseConfig = {
+      apiKey: "AIzaSyCtkeF6YTJaD_5B82GZlnYS1d7I6FfYiVw",
+      authDomain: "cys422-final-project.firebaseapp.com",
+      databaseURL: "https://cys422-final-project-default-rtdb.firebaseio.com",
+      projectId: "cys422-final-project",
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    // Listen for real-time messages
+    db.ref("messages").on("value", (snapshot) => {
+      const data = snapshot.val();
+      const box = document.getElementById("messages");
+
+      if (!data) {
+        box.innerHTML = "No messages yet...";
+        return;
+      }
+
+      let output = "";
+      Object.keys(data).forEach((key) => {
+        const entry = data[key];
+        const text = entry.text || "(empty)";
+        const time = new Date(entry.timestamp).toLocaleString();
+        output += text + "\n" + `<span class='timestamp'>${time}</span>` + "\n\n";
+      });
+
+      box.innerHTML = output;
+    });
+  </script>
+</body>
+</html>
