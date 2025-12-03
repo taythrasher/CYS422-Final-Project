@@ -62,7 +62,7 @@
       let output = "";
       Object.keys(data).forEach((key) => {
         const entry = data[key];
-        const text = entry.text || "(empty)";
+        const text = entry.message || "(empty)";
         const time = new Date(entry.timestamp).toLocaleString();
         output += text + "\n" + `<span class='timestamp'>${time}</span>` + "\n\n";
       });
@@ -71,4 +71,5 @@
     });
   </script>
 </body>
+
 </html>
